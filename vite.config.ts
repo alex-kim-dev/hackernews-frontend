@@ -12,4 +12,8 @@ export default defineConfig(() => ({
     setupFiles: './test.setup.ts',
     css: false,
   },
+
+  server: {
+    port: 3000,
+  },
 }));

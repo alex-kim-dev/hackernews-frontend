@@ -8,6 +8,7 @@
   "repository": "git@github.com:alex-kim-dev/hackernews-frontend.git",
   "license": "MIT",
   "author": "Alex Kim (https://github.com/alex-kim-dev)",
+  "type": "module",
   "scripts": {
     "build": "vite build",
     "format": "prettier --check \"**/*.{html,json,yml,md}\"",
