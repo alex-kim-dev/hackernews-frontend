@@ -29,10 +29,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'yarn'
 
       - name: Install
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
   lint:
     name: Lint & format
@@ -46,22 +46,22 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'yarn'
 
       - name: Install
         id: install
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
       - name: Lint typescript
-        run: npm run lint:code
+        run: yarn run lint:code
 
       - name: Lint styles
         if: always() && steps.install.outcome == 'success'
-        run: npm run lint:styles
+        run: yarn run lint:styles
 
       - name: Format
         if: always() && steps.install.outcome == 'success'
-        run: npm run format
+        run: yarn run format
 
   typecheck:
     name: Typecheck
@@ -75,13 +75,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'yarn'
 
       - name: Install
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
       - name: Typecheck
-        run: npm run typecheck
+        run: yarn run typecheck
 
   test:
     name: Test
@@ -95,13 +95,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'yarn'
 
       - name: Install
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
       - name: Test
-        run: npm run test:ci
+        run: yarn run test:ci
 
   build:
     name: Build
@@ -115,13 +115,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'yarn'
 
       - name: Install
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
       - name: Build
-        run: npm run build
+        run: yarn run build
 
       - name: Upload build
         uses: actions/upload-artifact@v3
@@ -129,3 +129,22 @@ jobs:
           name: build
           path: dist
           retention-days: 7
+
+  deploy:
+    name: Deploy to Github Pages
+    if: github.event_name == 'push'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Get build
+        uses: actions/download-artifact@v3
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: build
