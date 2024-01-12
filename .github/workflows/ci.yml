@@ -132,6 +132,7 @@ jobs:
 
   deploy:
     name: Deploy to Github Pages
+    if: github.event_name == 'push'
     needs: build
     runs-on: ubuntu-latest
     permissions:
