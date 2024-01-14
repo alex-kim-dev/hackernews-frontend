@@ -10,9 +10,14 @@ import { createRoot } from 'react-dom/client';
 
 import { App } from '~/App';
 
+const colorModePreference = window?.matchMedia('(prefers-color-scheme: dark)')
+  .matches
+  ? 'dark'
+  : 'light';
+
 const theme = createTheme({
   palette: {
-    mode: 'dark',
+    mode: colorModePreference,
   },
 });
 

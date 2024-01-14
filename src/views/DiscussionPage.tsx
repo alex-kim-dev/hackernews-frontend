@@ -1,3 +1,4 @@
+import Typography from '@mui/material/Typography';
 import { useLocation } from 'react-router-dom';
 
 export const DiscussionPage = () => {
@@ -7,5 +8,5 @@ export const DiscussionPage = () => {
 
   if (!id) return <h2>No such item</h2>;
 
-  return <h2>Discussion #{id}</h2>;
+  return <Typography variant='h2'>Discussion #{id}</Typography>;
 };
