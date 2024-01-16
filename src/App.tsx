@@ -56,7 +56,7 @@ export const App: React.FC = observer(function App() {
           <Container maxWidth='md' sx={{ marginBlock: ui.theme.spacing(2) }}>
             <Switch>
               <Route path='/item'>
-                <DiscussionPage />
+                <DiscussionPage appBarRef={appBarRef} />
               </Route>
               <Route path='/'>
                 <HomePage appBarRef={appBarRef} />
