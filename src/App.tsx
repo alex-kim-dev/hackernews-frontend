@@ -13,8 +13,7 @@ import { useRef } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import { ui } from '~/stores';
-import { DiscussionPage } from '~/views/DiscussionPage';
-import { HomePage } from '~/views/HomePage';
+import { DiscussionPage, HomePage, NotFoundPage } from '~/views';
 
 export const App: React.FC = observer(function App() {
   const appBarRef = useRef<HTMLDivElement>();
@@ -58,8 +57,11 @@ export const App: React.FC = observer(function App() {
               <Route path='/item'>
                 <DiscussionPage appBarRef={appBarRef} />
               </Route>
-              <Route path='/'>
+              <Route path='/' exact>
                 <HomePage appBarRef={appBarRef} />
+              </Route>
+              <Route path='*'>
+                <NotFoundPage />
               </Route>
             </Switch>
           </Container>

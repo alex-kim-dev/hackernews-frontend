@@ -12,7 +12,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { observer } from 'mobx-react-lite';
 import { createPortal } from 'react-dom';
 
-import { stories } from '~/stores/stories';
+import { stories } from '~/stores';
 
 interface HomePageProps {
   appBarRef?: React.MutableRefObject<HTMLDivElement | undefined>;

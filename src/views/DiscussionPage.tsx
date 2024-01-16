@@ -1,5 +1,6 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import { useTheme } from '@mui/material/styles';
@@ -52,7 +53,9 @@ export const DiscussionPage: React.FC<DiscussionPageProps> = ({
           Discussion #{id}
         </Typography>
       ) : (
-        <Alert severity='error'>There&apos;s no story with this ID.</Alert>
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Alert severity='error'>There&apos;s no story with this ID.</Alert>
+        </Box>
       )}
     </>
   );
