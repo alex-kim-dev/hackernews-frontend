@@ -10,24 +10,22 @@ import Typography from '@mui/material/Typography';
 import { observer } from 'mobx-react-lite';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
-import { store } from '~/store';
+import { ui } from '~/stores/ui';
 import { DiscussionPage } from '~/views/DiscussionPage';
 import { HomePage } from '~/views/HomePage';
 
 export const App: React.FC = observer(function App() {
   const handleThemeClick = () => {
-    store.changeColorMode(
-      store.theme.palette.mode === 'dark' ? 'light' : 'dark',
-    );
+    ui.changeColorMode(ui.theme.palette.mode === 'dark' ? 'light' : 'dark');
   };
 
   return (
-    <ThemeProvider theme={store.theme}>
+    <ThemeProvider theme={ui.theme}>
       <CssBaseline />
       <BrowserRouter>
         <AppBar position='sticky'>
           <Container maxWidth='md'>
-            <Toolbar>
+            <Toolbar disableGutters>
               <Typography
                 component='h1'
                 sx={{ fontWeight: 500, flexGrow: 1 }}
@@ -39,7 +37,7 @@ export const App: React.FC = observer(function App() {
                 edge='end'
                 size='large'
                 onClick={handleThemeClick}>
-                {store.theme.palette.mode === 'dark' ? (
+                {ui.theme.palette.mode === 'dark' ? (
                   <Brightness7Icon />
                 ) : (
                   <Brightness4Icon />
@@ -49,7 +47,7 @@ export const App: React.FC = observer(function App() {
           </Container>
         </AppBar>
         <main>
-          <Container maxWidth='md' sx={{ minHeight: '200vh' }}>
+          <Container maxWidth='md' sx={{ marginBlock: ui.theme.spacing(2) }}>
             <Switch>
               <Route path='/item'>
                 <DiscussionPage />

@@ -1,7 +1,7 @@
 import { createTheme, type Theme } from '@mui/material/styles';
 import { makeAutoObservable } from 'mobx';
 
-class Store {
+class UIStore {
   theme: Theme;
 
   constructor() {
@@ -34,4 +34,4 @@ class Store {
   }
 }
 
-export const store = new Store();
+export const ui = new UIStore();
