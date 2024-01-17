@@ -12,6 +12,7 @@ import { observer } from 'mobx-react-lite';
 import { useRef } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
+import { appBarContext } from '~/contexts';
 import { ui } from '~/stores';
 import { DiscussionPage, HomePage, NotFoundPage } from '~/views';
 
@@ -38,9 +39,9 @@ export const App: React.FC = observer(function App() {
               <Box ref={appBarRef} />
               <IconButton
                 aria-label='switch theme'
+                color='inherit'
                 edge='end'
                 size='large'
-                sx={{ color: ui.theme.palette.common.white }}
                 onClick={handleThemeClick}>
                 {ui.theme.palette.mode === 'dark' ? (
                   <Brightness7Icon />
@@ -52,19 +53,21 @@ export const App: React.FC = observer(function App() {
           </Container>
         </AppBar>
         <main>
-          <Container maxWidth='md' sx={{ marginBlock: ui.theme.spacing(2) }}>
-            <Switch>
-              <Route path='/item'>
-                <DiscussionPage appBarRef={appBarRef} />
-              </Route>
-              <Route path='/' exact>
-                <HomePage appBarRef={appBarRef} />
-              </Route>
-              <Route path='*'>
-                <NotFoundPage />
-              </Route>
-            </Switch>
-          </Container>
+          <appBarContext.Provider value={appBarRef.current}>
+            <Container maxWidth='md'>
+              <Switch>
+                <Route path='/item'>
+                  <DiscussionPage />
+                </Route>
+                <Route path='/' exact>
+                  <HomePage />
+                </Route>
+                <Route path='*'>
+                  <NotFoundPage />
+                </Route>
+              </Switch>
+            </Container>
+          </appBarContext.Provider>
         </main>
       </BrowserRouter>
     </ThemeProvider>

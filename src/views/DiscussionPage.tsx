@@ -6,25 +6,23 @@ import IconButton from '@mui/material/IconButton';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useContext } from 'react';
 import { createPortal } from 'react-dom';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 
-interface DiscussionPageProps {
-  appBarRef?: React.MutableRefObject<HTMLDivElement | undefined>;
-}
+import { appBarContext } from '~/contexts';
 
-export const DiscussionPage: React.FC<DiscussionPageProps> = ({
-  appBarRef,
-}) => {
+export const DiscussionPage: React.FC = () => {
   const theme = useTheme();
   const isSmUp = useMediaQuery(theme.breakpoints.up('sm').slice(7));
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const id = queryParams.get('id');
+  const appBarSlot = useContext(appBarContext);
 
   return (
     <>
-      {appBarRef?.current &&
+      {appBarSlot &&
         createPortal(
           isSmUp ? (
             <Button
@@ -46,7 +44,7 @@ export const DiscussionPage: React.FC<DiscussionPageProps> = ({
               <ArrowBackIcon />
             </IconButton>
           ),
-          appBarRef.current,
+          appBarSlot,
         )}
       {id ? (
         <Typography component='h2' variant='h6'>

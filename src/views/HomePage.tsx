@@ -10,26 +10,23 @@ import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { observer } from 'mobx-react-lite';
+import { useContext } from 'react';
 import { createPortal } from 'react-dom';
 
+import { appBarContext } from '~/contexts';
 import { stories } from '~/stores';
 
-interface HomePageProps {
-  appBarRef?: React.MutableRefObject<HTMLDivElement | undefined>;
-}
-
-export const HomePage: React.FC<HomePageProps> = observer(function HomePage({
-  appBarRef,
-}) {
+export const HomePage: React.FC = observer(function HomePage() {
   const { state } = stories;
   const theme = useTheme();
   const isSmUp = useMediaQuery(theme.breakpoints.up('sm').slice(7));
+  const appBarSlot = useContext(appBarContext);
 
   const handleRefresh = () => {
     stories.getTopStories();
   };
 
-  const appBarPortal = appBarRef?.current
+  const appBarPortal = appBarSlot
     ? createPortal(
         isSmUp ? (
           <Button
@@ -51,7 +48,7 @@ export const HomePage: React.FC<HomePageProps> = observer(function HomePage({
             <ReplayIcon />
           </IconButton>
         ),
-        appBarRef.current,
+        appBarSlot,
       )
     : null;
 
