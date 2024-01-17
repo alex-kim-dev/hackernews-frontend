@@ -52,23 +52,24 @@ export const App: React.FC = observer(function App() {
             </Toolbar>
           </Container>
         </AppBar>
-        <main>
+        <Container
+          component='main'
+          maxWidth='md'
+          sx={{ paddingBlock: ui.theme.spacing(2) }}>
           <appBarContext.Provider value={appBarRef.current}>
-            <Container maxWidth='md'>
-              <Switch>
-                <Route path='/item'>
-                  <DiscussionPage />
-                </Route>
-                <Route path='/' exact>
-                  <HomePage />
-                </Route>
-                <Route path='*'>
-                  <NotFoundPage />
-                </Route>
-              </Switch>
-            </Container>
+            <Switch>
+              <Route path='/item'>
+                <DiscussionPage />
+              </Route>
+              <Route path='/' exact>
+                <HomePage />
+              </Route>
+              <Route path='*'>
+                <NotFoundPage />
+              </Route>
+            </Switch>
           </appBarContext.Provider>
-        </main>
+        </Container>
       </BrowserRouter>
     </ThemeProvider>
   );

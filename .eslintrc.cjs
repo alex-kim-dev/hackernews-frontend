@@ -42,6 +42,7 @@ module.exports = {
         assert: 'either',
       },
     ],
+    'no-restricted-syntax': 'off',
     'react/function-component-definition': [
       'error',
       {

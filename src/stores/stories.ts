@@ -8,7 +8,7 @@ axios.defaults.baseURL = 'https://hacker-news.firebaseio.com/v0';
 class StoriesStore {
   private readonly amount = 5;
 
-  topStories: Item[] = [];
+  latest: Item[] = [];
 
   state: 'idle' | 'pending' | 'done' | 'error' = 'idle';
 
@@ -19,7 +19,7 @@ class StoriesStore {
 
   async getTopStories() {
     this.state = 'pending';
-    this.topStories = [];
+    this.latest = [];
 
     try {
       const { data: storiesIds } = await axios.get<ItemID[]>('topstories.json');
@@ -31,7 +31,7 @@ class StoriesStore {
 
       runInAction(() => {
         this.state = 'done';
-        this.topStories = responses.map(({ data }) => data);
+        this.latest = responses.map(({ data }) => data);
       });
     } catch (error) {
       runInAction(() => {
