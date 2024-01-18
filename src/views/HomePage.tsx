@@ -6,7 +6,6 @@ import Alert from '@mui/material/Alert';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import CircularProgress from '@mui/material/CircularProgress';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import List from '@mui/material/List';
@@ -72,18 +71,44 @@ export const HomePage: React.FC = observer(function HomePage() {
       )
     : null;
 
-  if (state !== 'done') {
+  const topPart = (
+    <>
+      {appBarPortal}
+      <Typography component='h2' variant='h5'>
+        Recent
+      </Typography>
+    </>
+  );
+
+  if (state === 'error') {
     return (
       <>
-        {appBarPortal}
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-          {state === 'idle' && <Alert severity='info'>Nothing to show.</Alert>}
-          {state === 'pending' && <CircularProgress />}
-          {state === 'error' && (
-            <Alert severity='error'>
-              There was a problem getting the content. Try again.
-            </Alert>
-          )}
+        {topPart}
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            padding: spacing(2),
+          }}>
+          <Alert severity='error'>
+            There was a problem getting the content. Try again.
+          </Alert>
+        </Box>
+      </>
+    );
+  }
+
+  if (content.recent.length === 0) {
+    return (
+      <>
+        {topPart}
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            padding: spacing(2),
+          }}>
+          <Alert severity='info'>Nothing to show.</Alert>
         </Box>
       </>
     );
@@ -91,16 +116,13 @@ export const HomePage: React.FC = observer(function HomePage() {
 
   return (
     <>
-      {appBarPortal}
-      <Typography component='h2' variant='h5'>
-        Recent
-      </Typography>
+      {topPart}
       <List sx={{ marginInline: spacing(-2) }}>
         {content.recent.map((item) => (
           <ListItem
             key={item.id}
             sx={{ '&:hover': { backgroundColor: palette.action.hover } }}>
-            <ListItemAvatar>
+            <ListItemAvatar sx={{ alignSelf: 'flex-start', marginTop: 1 }}>
               <Avatar>
                 {item.type === 'story' && <ArticleIcon />}
                 {item.type === 'job' && <WorkIcon />}

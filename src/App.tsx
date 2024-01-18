@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import IconButton from '@mui/material/IconButton';
+import LinearProgress from '@mui/material/LinearProgress';
 import { ThemeProvider } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -13,7 +14,7 @@ import { useRef } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import { appBarContext } from '~/contexts';
-import { ui } from '~/stores';
+import { content, ui } from '~/stores';
 import { DiscussionPage, HomePage, NotFoundPage } from '~/views';
 
 export const App: React.FC = observer(function App() {
@@ -51,6 +52,12 @@ export const App: React.FC = observer(function App() {
               </IconButton>
             </Toolbar>
           </Container>
+          {content.state === 'pending' && (
+            <LinearProgress
+              color='inherit'
+              sx={{ position: 'absolute', width: '100%', insetBlockEnd: -4 }}
+            />
+          )}
         </AppBar>
         <Container
           component='main'

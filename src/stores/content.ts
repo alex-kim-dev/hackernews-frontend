@@ -8,18 +8,26 @@ axios.defaults.baseURL = 'https://hacker-news.firebaseio.com/v0';
 class ContentStore {
   private readonly numOfRecent = 5;
 
+  /** in seconds */
+  private readonly refreshInterval = 60;
+
+  private refreshTimerID: number = -1;
+
   recent: Item[] = [];
 
-  state: 'idle' | 'pending' | 'done' | 'error' = 'idle';
+  state: 'initial' | 'pending' | 'done' | 'error' = 'initial';
 
   constructor() {
     makeAutoObservable(this);
     this.getRecent();
   }
 
-  async getRecent() {
-    this.state = 'pending';
-    this.recent = [];
+  setState(state: typeof this.state) {
+    this.state = state;
+  }
+
+  async #getRecent() {
+    this.setState('pending');
 
     try {
       const { data: itemIDs } = await axios.get<ItemID[]>('topstories.json');
@@ -30,14 +38,23 @@ class ContentStore {
       );
 
       runInAction(() => {
-        this.state = 'done';
+        this.setState('done');
         this.recent = responses.map(({ data }) => data);
       });
     } catch (error) {
       runInAction(() => {
-        this.state = 'error';
+        this.setState('error');
       });
     }
+  }
+
+  getRecent() {
+    clearTimeout(this.refreshTimerID);
+    this.#getRecent();
+    this.refreshTimerID = setTimeout(
+      () => this.#getRecent(),
+      this.refreshInterval * 1000,
+    );
   }
 }
 
