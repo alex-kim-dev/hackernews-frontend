@@ -5,33 +5,33 @@ import type { Item, ItemID } from '~/types';
 
 axios.defaults.baseURL = 'https://hacker-news.firebaseio.com/v0';
 
-class StoriesStore {
-  private readonly amount = 5;
+class ContentStore {
+  private readonly numOfRecent = 5;
 
-  latest: Item[] = [];
+  recent: Item[] = [];
 
   state: 'idle' | 'pending' | 'done' | 'error' = 'idle';
 
   constructor() {
     makeAutoObservable(this);
-    this.getTopStories();
+    this.getRecent();
   }
 
-  async getTopStories() {
+  async getRecent() {
     this.state = 'pending';
-    this.latest = [];
+    this.recent = [];
 
     try {
-      const { data: storiesIds } = await axios.get<ItemID[]>('topstories.json');
+      const { data: itemIDs } = await axios.get<ItemID[]>('topstories.json');
       const responses = await Promise.all(
-        storiesIds
-          .slice(0, this.amount)
+        itemIDs
+          .slice(0, this.numOfRecent)
           .map((id) => axios.get<Item>(`item/${id}.json`)),
       );
 
       runInAction(() => {
         this.state = 'done';
-        this.latest = responses.map(({ data }) => data);
+        this.recent = responses.map(({ data }) => data);
       });
     } catch (error) {
       runInAction(() => {
@@ -41,4 +41,4 @@ class StoriesStore {
   }
 }
 
-export const stories = new StoriesStore();
+export const content = new ContentStore();

@@ -52,7 +52,7 @@ export const DiscussionPage: React.FC = () => {
         </Typography>
       ) : (
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-          <Alert severity='error'>There&apos;s no story with this ID.</Alert>
+          <Alert severity='error'>There&apos;s no post with this ID.</Alert>
         </Box>
       )}
     </>

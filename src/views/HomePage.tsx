@@ -22,7 +22,7 @@ import { createPortal } from 'react-dom';
 import { Link as RouterLink } from 'react-router-dom';
 
 import { appBarContext } from '~/contexts';
-import { stories } from '~/stores';
+import { content } from '~/stores';
 import { Item } from '~/types';
 import { relTimeFormat } from '~/utils';
 
@@ -38,20 +38,19 @@ const makeInfoStr = ({ by, score, time, descendants }: Item): string => {
 };
 
 export const HomePage: React.FC = observer(function HomePage() {
-  const { state } = stories;
+  const { state } = content;
   const { breakpoints, spacing, palette } = useTheme();
   const isSmUp = useMediaQuery(breakpoints.up('sm').slice(7));
   const appBarSlot = useContext(appBarContext);
 
   const handleRefresh = () => {
-    stories.getTopStories();
+    content.getRecent();
   };
 
   const appBarPortal = appBarSlot
     ? createPortal(
         isSmUp ? (
           <Button
-            aria-label='Refresh stories'
             color='inherit'
             disabled={state === 'pending'}
             size='large'
@@ -61,7 +60,7 @@ export const HomePage: React.FC = observer(function HomePage() {
           </Button>
         ) : (
           <IconButton
-            aria-label='Refresh stories'
+            aria-label='Refresh'
             color='inherit'
             disabled={state === 'pending'}
             size='large'
@@ -82,7 +81,7 @@ export const HomePage: React.FC = observer(function HomePage() {
           {state === 'pending' && <CircularProgress />}
           {state === 'error' && (
             <Alert severity='error'>
-              There was a problem getting the stories. Try again.
+              There was a problem getting the content. Try again.
             </Alert>
           )}
         </Box>
@@ -94,27 +93,27 @@ export const HomePage: React.FC = observer(function HomePage() {
     <>
       {appBarPortal}
       <Typography component='h2' variant='h5'>
-        Latest stories
+        Recent
       </Typography>
       <List sx={{ marginInline: spacing(-2) }}>
-        {stories.latest.map((story) => (
+        {content.recent.map((item) => (
           <ListItem
-            key={story.id}
+            key={item.id}
             sx={{ '&:hover': { backgroundColor: palette.action.hover } }}>
             <ListItemAvatar>
               <Avatar>
-                {story.type === 'story' && <ArticleIcon />}
-                {story.type === 'job' && <WorkIcon />}
-                {story.type === 'poll' && <PollIcon />}
+                {item.type === 'story' && <ArticleIcon />}
+                {item.type === 'job' && <WorkIcon />}
+                {item.type === 'poll' && <PollIcon />}
               </Avatar>
             </ListItemAvatar>
             <ListItemText
               primary={
-                <Link component={RouterLink} to={`item?id=${story.id}.json`}>
-                  {story.title || '<No title>'}
+                <Link component={RouterLink} to={`item?id=${item.id}.json`}>
+                  {item.title || '<No title>'}
                 </Link>
               }
-              secondary={makeInfoStr(story)}
+              secondary={makeInfoStr(item)}
             />
           </ListItem>
         ))}
