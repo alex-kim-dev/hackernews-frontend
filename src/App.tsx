@@ -27,7 +27,7 @@ export const App: React.FC = observer(function App() {
   return (
     <ThemeProvider theme={ui.theme}>
       <CssBaseline />
-      <BrowserRouter>
+      <BrowserRouter basename={import.meta.env.BASE_URL}>
         <AppBar position='sticky'>
           <Container maxWidth='md'>
             <Toolbar disableGutters>
@@ -63,7 +63,7 @@ export const App: React.FC = observer(function App() {
           component='main'
           maxWidth='md'
           sx={{ paddingBlock: ui.theme.spacing(2) }}>
-          <appBarContext.Provider value={appBarRef.current}>
+          <appBarContext.Provider value={appBarRef}>
             <Switch>
               <Route path='/item'>
                 <DiscussionPage />

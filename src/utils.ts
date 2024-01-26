@@ -16,8 +16,9 @@ export const relTimeFormat = (time: number): string => {
 
   for (const [unit, div] of relTimeUnits) {
     const int = Math.trunc(diff / div);
-    if (int >= 1 || int <= -1) return rtf.format(int, unit);
+    if (int >= 1 || int <= -1)
+      return rtf.format(int, unit).replaceAll(' ', '\xa0');
   }
 
-  return rtf.format(diff, 'second');
+  return 'less\xa0than a\xa0minute\xa0ago';
 };

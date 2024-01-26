@@ -28,11 +28,11 @@ import { relTimeFormat } from '~/utils';
 const makeInfoStr = ({ by, score, time, descendants }: Item): string => {
   const parts = [];
   if (score !== undefined)
-    parts.push(`${score} point${score === 1 ? '' : 's'}`);
-  if (by) parts.push(`by ${by}`);
+    parts.push(`${score}\xa0point${score === 1 ? '' : 's'}`);
+  if (by) parts.push(`by\xa0${by}`);
   if (time !== undefined) parts.push(relTimeFormat(time));
   if (descendants)
-    parts.push(`| ${descendants} comment${descendants === 1 ? '' : 's'}`);
+    parts.push(`—\xa0${descendants}\xa0comment${descendants === 1 ? '' : 's'}`);
   return parts.join(' ');
 };
 
@@ -46,7 +46,7 @@ export const HomePage: React.FC = observer(function HomePage() {
     content.getRecent();
   };
 
-  const appBarPortal = appBarSlot
+  const appBarPortal = appBarSlot?.current
     ? createPortal(
         isSmUp ? (
           <Button
@@ -67,7 +67,7 @@ export const HomePage: React.FC = observer(function HomePage() {
             <ReplayIcon />
           </IconButton>
         ),
-        appBarSlot,
+        appBarSlot.current,
       )
     : null;
 
@@ -98,7 +98,7 @@ export const HomePage: React.FC = observer(function HomePage() {
     );
   }
 
-  if (content.recent.length === 0) {
+  if (content.recent.length === 0 && state !== 'pending') {
     return (
       <>
         {topPart}
@@ -136,6 +136,7 @@ export const HomePage: React.FC = observer(function HomePage() {
                 </Link>
               }
               secondary={makeInfoStr(item)}
+              sx={{ textWrap: 'balance' }}
             />
           </ListItem>
         ))}

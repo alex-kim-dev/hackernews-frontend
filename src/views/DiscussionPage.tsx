@@ -22,7 +22,7 @@ export const DiscussionPage: React.FC = () => {
 
   return (
     <>
-      {appBarSlot &&
+      {appBarSlot?.current &&
         createPortal(
           isSmUp ? (
             <Button
@@ -44,7 +44,7 @@ export const DiscussionPage: React.FC = () => {
               <ArrowBackIcon />
             </IconButton>
           ),
-          appBarSlot,
+          appBarSlot.current,
         )}
       {id ? (
         <Typography component='h2' variant='h6'>

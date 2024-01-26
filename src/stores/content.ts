@@ -11,7 +11,7 @@ class ContentStore {
   /** in seconds */
   private readonly refreshInterval = 60;
 
-  private refreshTimerID: number = -1;
+  private refreshTimerID = -1;
 
   recent: Item[] = [];
 
@@ -30,21 +30,19 @@ class ContentStore {
     this.setState('pending');
 
     try {
-      const { data: itemIDs } = await axios.get<ItemID[]>('topstories.json');
+      const { data: itemIDs } = await axios.get<ItemID[]>('newstories.json');
       const responses = await Promise.all(
         itemIDs
           .slice(0, this.numOfRecent)
           .map((id) => axios.get<Item>(`item/${id}.json`)),
       );
 
+      this.setState('done');
       runInAction(() => {
-        this.setState('done');
         this.recent = responses.map(({ data }) => data);
       });
     } catch (error) {
-      runInAction(() => {
-        this.setState('error');
-      });
+      this.setState('error');
     }
   }
 
@@ -52,7 +50,7 @@ class ContentStore {
     clearTimeout(this.refreshTimerID);
     this.#getRecent();
     this.refreshTimerID = setTimeout(
-      () => this.#getRecent(),
+      () => this.getRecent(),
       this.refreshInterval * 1000,
     );
   }
