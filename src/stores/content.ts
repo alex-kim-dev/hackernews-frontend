@@ -13,13 +13,14 @@ class ContentStore {
 
   private refreshTimerID = -1;
 
+  private controller = new AbortController();
+
   recent: Item[] = [];
 
   state: 'initial' | 'pending' | 'done' | 'error' = 'initial';
 
   constructor() {
     makeAutoObservable(this);
-    this.getRecent();
   }
 
   setState(state: typeof this.state) {
@@ -30,11 +31,18 @@ class ContentStore {
     this.setState('pending');
 
     try {
-      const { data: itemIDs } = await axios.get<ItemID[]>('newstories.json');
+      this.controller = new AbortController();
+
+      const { data: itemIDs } = await axios.get<ItemID[]>('newstories.json', {
+        signal: this.controller.signal,
+      });
+
       const responses = await Promise.all(
-        itemIDs
-          .slice(0, this.numOfRecent)
-          .map((id) => axios.get<Item>(`item/${id}.json`)),
+        itemIDs.slice(0, this.numOfRecent).map((id) =>
+          axios.get<Item>(`item/${id}.json`, {
+            signal: this.controller.signal,
+          }),
+        ),
       );
 
       this.setState('done');
@@ -53,6 +61,11 @@ class ContentStore {
       () => this.getRecent(),
       this.refreshInterval * 1000,
     );
+  }
+
+  stopUpdate() {
+    this.controller.abort();
+    clearTimeout(this.refreshTimerID ?? 0);
   }
 }
 

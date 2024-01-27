@@ -16,7 +16,7 @@ import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { observer } from 'mobx-react-lite';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -41,6 +41,13 @@ export const HomePage: React.FC = observer(function HomePage() {
   const { breakpoints, spacing, palette } = useTheme();
   const isSmUp = useMediaQuery(breakpoints.up('sm').slice(7));
   const appBarSlot = useContext(appBarContext);
+
+  useEffect(() => {
+    content.getRecent();
+    return () => {
+      content.stopUpdate();
+    };
+  }, []);
 
   const handleRefresh = () => {
     content.getRecent();
