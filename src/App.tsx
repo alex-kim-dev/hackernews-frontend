@@ -1,5 +1,6 @@
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
+import NewspaperIcon from '@mui/icons-material/Newspaper';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -12,24 +13,30 @@ import { observer } from 'mobx-react-lite';
 import { useRef } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
-import { appBarContext } from '~/contexts';
 import { ui } from '~/stores';
 import { DiscussionPage, HomePage, NotFoundPage } from '~/views';
 
 export const App: React.FC = observer(function App() {
   const appBarRef = useRef<HTMLDivElement>();
+  const {
+    theme: { palette, spacing },
+  } = ui;
 
   const handleThemeClick = () => {
-    ui.changeColorMode(ui.theme.palette.mode === 'dark' ? 'light' : 'dark');
+    ui.changeColorMode(palette.mode === 'dark' ? 'light' : 'dark');
   };
 
   return (
     <ThemeProvider theme={ui.theme}>
       <CssBaseline />
       <BrowserRouter basename={import.meta.env.BASE_URL}>
-        <AppBar position='sticky'>
+        <AppBar position='static'>
           <Container maxWidth='md'>
-            <Toolbar disableGutters>
+            <Toolbar sx={{ gap: spacing(1) }} disableGutters>
+              <NewspaperIcon
+                aria-hidden='true'
+                sx={{ marginInlineEnd: spacing(1.5) }}
+              />
               <Typography
                 component='h1'
                 sx={{ fontWeight: 500, flexGrow: 1 }}
@@ -43,7 +50,7 @@ export const App: React.FC = observer(function App() {
                 edge='end'
                 size='large'
                 onClick={handleThemeClick}>
-                {ui.theme.palette.mode === 'dark' ? (
+                {palette.mode === 'dark' ? (
                   <Brightness7Icon />
                 ) : (
                   <Brightness4Icon />
@@ -52,23 +59,18 @@ export const App: React.FC = observer(function App() {
             </Toolbar>
           </Container>
         </AppBar>
-        <Container
-          component='main'
-          maxWidth='md'
-          sx={{ paddingBlock: ui.theme.spacing(2) }}>
-          <appBarContext.Provider value={appBarRef}>
-            <Switch>
-              <Route path='/item'>
-                <DiscussionPage />
-              </Route>
-              <Route path='/' exact>
-                <HomePage />
-              </Route>
-              <Route path='*'>
-                <NotFoundPage />
-              </Route>
-            </Switch>
-          </appBarContext.Provider>
+        <Container component='main' maxWidth='md'>
+          <Switch>
+            <Route path='/item'>
+              <DiscussionPage />
+            </Route>
+            <Route path='/' exact>
+              <HomePage />
+            </Route>
+            <Route path='*'>
+              <NotFoundPage />
+            </Route>
+          </Switch>
         </Container>
       </BrowserRouter>
     </ThemeProvider>
