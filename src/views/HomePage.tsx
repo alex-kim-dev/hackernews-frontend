@@ -6,21 +6,19 @@ import Alert from '@mui/material/Alert';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
+import LinearProgress from '@mui/material/LinearProgress';
 import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 import { useTheme } from '@mui/material/styles';
+import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import { observer } from 'mobx-react-lite';
-import { useContext, useEffect } from 'react';
-import { createPortal } from 'react-dom';
+import { useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
-import { appBarContext } from '~/contexts';
 import { content } from '~/stores';
 import { Item } from '~/types';
 import { relTimeFormat } from '~/utils';
@@ -38,9 +36,7 @@ const makeInfoStr = ({ by, score, time, descendants }: Item): string => {
 
 export const HomePage: React.FC = observer(function HomePage() {
   const { state } = content;
-  const { breakpoints, spacing, palette } = useTheme();
-  const isSmUp = useMediaQuery(breakpoints.up('sm').slice(7));
-  const appBarSlot = useContext(appBarContext);
+  const { spacing, palette } = useTheme();
 
   useEffect(() => {
     content.getRecent();
@@ -53,37 +49,30 @@ export const HomePage: React.FC = observer(function HomePage() {
     content.getRecent();
   };
 
-  const appBarPortal = appBarSlot?.current
-    ? createPortal(
-        isSmUp ? (
-          <Button
-            color='inherit'
-            disabled={state === 'pending'}
-            size='large'
-            startIcon={<ReplayIcon />}
-            onClick={handleRefresh}>
-            Refresh
-          </Button>
-        ) : (
-          <IconButton
-            aria-label='Refresh'
-            color='inherit'
-            disabled={state === 'pending'}
-            size='large'
-            onClick={handleRefresh}>
-            <ReplayIcon />
-          </IconButton>
-        ),
-        appBarSlot.current,
-      )
-    : null;
-
   const topPart = (
     <>
-      {appBarPortal}
-      <Typography component='h2' variant='h5'>
-        Recent
-      </Typography>
+      <Box sx={{ minBlockSize: 4 }}>
+        {content.state === 'pending' && (
+          <LinearProgress
+            color='inherit'
+            sx={{ marginInline: 'calc(-50vw + 50%)' }}
+          />
+        )}
+      </Box>
+      <Toolbar disableGutters>
+        <Typography component='h2' flexGrow={1} variant='h5'>
+          Recent
+        </Typography>
+        <Button
+          color='inherit'
+          disabled={state === 'pending'}
+          size='large'
+          startIcon={<ReplayIcon />}
+          sx={{ marginInlineEnd: spacing(-1) }}
+          onClick={handleRefresh}>
+          Refresh
+        </Button>
+      </Toolbar>
     </>
   );
 
@@ -138,7 +127,7 @@ export const HomePage: React.FC = observer(function HomePage() {
             </ListItemAvatar>
             <ListItemText
               primary={
-                <Link component={RouterLink} to={`item?id=${item.id}.json`}>
+                <Link component={RouterLink} to={`item?id=${item.id}`}>
                   {item.title || '<No title>'}
                 </Link>
               }
