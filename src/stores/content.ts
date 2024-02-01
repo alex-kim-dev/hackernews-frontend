@@ -17,18 +17,19 @@ class ContentStore {
 
   recent: Item[] = [];
 
-  state: 'initial' | 'pending' | 'done' | 'error' = 'initial';
+  status: 'pending' | 'done' | 'error' = 'done';
 
   constructor() {
     makeAutoObservable(this);
   }
 
-  setState(state: typeof this.state) {
-    this.state = state;
+  setStatus(status: typeof this.status) {
+    this.status = status;
   }
 
   async #getRecent() {
-    this.setState('pending');
+    if (this.status === 'pending') return;
+    this.setStatus('pending');
 
     try {
       this.controller = new AbortController();
@@ -45,12 +46,12 @@ class ContentStore {
         ),
       );
 
-      this.setState('done');
+      this.setStatus('done');
       runInAction(() => {
         this.recent = responses.map(({ data }) => data);
       });
     } catch (error) {
-      this.setState('error');
+      if (!axios.isCancel(error)) this.setStatus('error');
     }
   }
 
@@ -66,6 +67,7 @@ class ContentStore {
   stopUpdate() {
     this.controller.abort();
     clearTimeout(this.refreshTimerID ?? 0);
+    if (this.status !== 'done') this.setStatus('done');
   }
 }
 

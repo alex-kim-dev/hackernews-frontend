@@ -35,7 +35,7 @@ const makeInfoStr = ({ by, score, time, descendants }: Item): string => {
 };
 
 export const HomePage: React.FC = observer(function HomePage() {
-  const { state } = content;
+  const { status } = content;
   const { spacing, palette } = useTheme();
 
   useEffect(() => {
@@ -52,7 +52,7 @@ export const HomePage: React.FC = observer(function HomePage() {
   const topPart = (
     <>
       <Box sx={{ minBlockSize: 4 }}>
-        {content.state === 'pending' && (
+        {content.status === 'pending' && (
           <LinearProgress
             color='inherit'
             sx={{ marginInline: 'calc(-50vw + 50%)' }}
@@ -65,7 +65,7 @@ export const HomePage: React.FC = observer(function HomePage() {
         </Typography>
         <Button
           color='inherit'
-          disabled={state === 'pending'}
+          disabled={status === 'pending'}
           size='large'
           startIcon={<ReplayIcon />}
           sx={{ marginInlineEnd: spacing(-1) }}
@@ -76,7 +76,7 @@ export const HomePage: React.FC = observer(function HomePage() {
     </>
   );
 
-  if (state === 'error') {
+  if (status === 'error') {
     return (
       <>
         {topPart}
@@ -94,7 +94,7 @@ export const HomePage: React.FC = observer(function HomePage() {
     );
   }
 
-  if (content.recent.length === 0 && state !== 'pending') {
+  if (content.recent.length === 0 && status !== 'pending') {
     return (
       <>
         {topPart}
