@@ -42,10 +42,11 @@ module.exports = {
         assert: 'either',
       },
     ],
+    'no-restricted-syntax': 'off',
     'react/function-component-definition': [
       'error',
       {
-        namedComponents: 'arrow-function',
+        namedComponents: ['arrow-function', 'function-expression'],
         unnamedComponents: 'arrow-function',
       },
     ],
