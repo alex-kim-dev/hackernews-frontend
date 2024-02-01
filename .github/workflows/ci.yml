@@ -57,7 +57,7 @@ jobs:
 
       - name: Lint styles
         if: always() && steps.install.outcome == 'success'
-        run: yarn run lint:styles
+        run: yarn run lint:styles --allow-empty-input
 
       - name: Format
         if: always() && steps.install.outcome == 'success'
